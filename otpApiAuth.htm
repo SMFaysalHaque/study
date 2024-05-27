@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Form Example</title>
+    <!-- Include Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+</head>
+<body>
+ 
+<div id="app">
+    <form @submit.prevent="submitForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" v-model="name">
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" v-model="password">
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+    <p v-if="formError" style="color: red;">{{ formError }}</p>
+</div>
+ 
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            name: '',
+            password: '',
+            formError: ''
+        },
+        methods: {
+            submitForm() {
+                // Reset form error
+                this.formError = '';
+ 
+                // Validate form
+                if (!this.name) {
+                    this.formError = 'Please enter your name.';
+                    return;
+                }
+                if (this.password.length < 6) {
+                    this.formError = 'Password must be at least 6 characters long.';
+                    return;
+                }
+ 
+                // If form is valid, call OTP endpoint (Replace with your actual endpoint)
+                this.callOTP();
+            },
+            callOTP() {
+                // Dummy function to simulate OTP call
+                console.log('Calling OTP endpoint...');
+                // Replace the following line with actual API call to OTP endpoint
+                // axios.post('/api/otp', { name: this.name, password: this.password })
+                //     .then(response => {
+                //         console.log('OTP sent successfully:', response.data);
+                //     })
+                //     .catch(error => {
+                //         console.error('Error sending OTP:', error);
+                //     });
+            }
+        }
+    });
+</script>
+ 
+</body>
+</html>
