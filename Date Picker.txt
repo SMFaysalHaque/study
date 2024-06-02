@@ -1,0 +1,89 @@
+<!-- src/components/DatePicker.vue -->
+
+<template>
+  <v-container>
+    <v-row>
+      <v-col>
+        <v-menu
+          v-model="menu"
+          :close-on-content-click="false"
+          transition="scale-transition"
+          offset-y
+          min-width="290px"
+        >
+          <!-- prepend-icon="mdi-calendar" -->
+          <template #activator="{ props }">
+            <v-text-field
+              v-model="formattedDate"
+              variant="outlined"
+              label="Selected Date"
+              :append-inner-icon="$icons.mdiCalendar"
+              readonly
+              v-bind="props"
+              @click="menu = true"
+            />
+          </template>
+          <v-date-picker
+            v-model="selectedDate"
+            @input="onDatePick"
+          />
+        </v-menu>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+  
+  <script lang="ts">
+    // import { defineComponent } from 'vue'
+  
+  export default {
+    name: 'DatePicker',
+    data() {
+      return {
+        menu: false,
+        selectedDate: null as string | null,
+        formattedDate: '',
+        selectDate: '' as string
+      }
+    },
+    watch: {
+      selectedDate(newValue) {
+        if (newValue) {
+          this.formattedDate = this.formatDate(new Date(newValue))
+        } else {
+          this.formattedDate = ''
+        }
+      }
+    },
+    created() {
+      this.initializeSelectedDate();
+    },
+    mounted () {
+    },
+    methods: {
+      initializeSelectedDate() {
+        // Get the current date adjusted for the timezone offset
+        const currentDate = new Date(Date.now() - new Date().getTimezoneOffset() * 60000);
+        this.selectedDate = currentDate.toISOString().substr(0, 10); // Set selectedDate to current date in ISO format
+        this.formattedDate = this.formatDate(currentDate);
+      },
+      formatDate(date: Date) {
+        const day = String(date.getDate()).padStart(2, '0')
+        const month = String(date.getMonth() + 1).padStart(2, '0') // Months are 0-based
+        const year = date.getFullYear()
+        this.selectDate = `${day}-${month}-${year}`
+        return this.$translate(this.selectDate)
+      },
+      onDatePick(date: string) {
+        this.selectedDate = this.$translate(date)
+        console.log('Selected date:', this.selectedDate)
+        this.menu = false
+      }
+    }
+  }
+  </script>
+  
+  <style scoped>
+  /* Add any component-specific styles here */
+  </style>
+  
